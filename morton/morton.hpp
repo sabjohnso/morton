@@ -4,6 +4,7 @@
 // ... morton header files
 //
 #include <morton/bits/Bit_Conveyor.hpp>
+#include <morton/bits/Encoder.hpp>
 #include <morton/bits/Mask.hpp>
 #include <morton/bits/Natural.hpp>
 #include <morton/bits/Shift.hpp>
@@ -28,5 +29,9 @@ namespace morton {
 
   using details::codomain_bits;
   using details::domain_bits;
+
+  using details::column_major;
+  using details::make_encoder;
+  using details::row_major;
 
 } // end of namespace morton
