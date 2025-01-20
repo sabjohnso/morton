@@ -3,8 +3,8 @@
 //
 // ... morton header files
 //
-#include <morton/bits/Conveyor_Sequence.hpp>
 #include <morton/bits/Orientation.hpp>
+#include <morton/bits/Permutation_Sequence.hpp>
 
 //
 // ... Standard header files

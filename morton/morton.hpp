@@ -3,15 +3,13 @@
 //
 // ... morton header files
 //
-#include <morton/bits/Bit_Conveyor.hpp>
 #include <morton/bits/Decoder.hpp>
 #include <morton/bits/Encoder.hpp>
 #include <morton/bits/Mask.hpp>
 #include <morton/bits/Natural.hpp>
 #include <morton/bits/Shift.hpp>
+#include <morton/bits/Simple_Permutation.hpp>
 #include <morton/bits/Type.hpp>
-#include <morton/bits/contraction_masks.hpp>
-#include <morton/bits/expansion_masks.hpp>
 
 namespace morton {
 
