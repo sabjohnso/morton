@@ -31,7 +31,7 @@ namespace morton::details {
    * @tparam Hold Specification of the bits that will not move (the remaining are zeroed).
    */
   template <typename Size, typename Dist, typename Dir, typename Move, typename Hold>
-  struct Bit_Conveyor {
+  struct Simple_Permutation {
     Size size{};
     Dist dist{};
     Dir dir{};
@@ -51,13 +51,13 @@ namespace morton::details {
     }
 
     friend std::ostream &
-    operator<<(std::ostream &os, const Bit_Conveyor &conveyor) {
-      return os << "Bit_Conveyor{"
-                << ".size=" << conveyor.size << ","
-                << ".dist=" << conveyor.dist << ","
-                << ".dir=" << conveyor.dir << ","
-                << ".move=" << conveyor.move << ","
-                << ".hold=" << conveyor.hold << "}";
+    operator<<(std::ostream &os, const Simple_Permutation &permutation) {
+      return os << "Simple_Permutation{"
+                << ".size=" << permutation.size << ","
+                << ".dist=" << permutation.dist << ","
+                << ".dir=" << permutation.dir << ","
+                << ".move=" << permutation.move << ","
+                << ".hold=" << permutation.hold << "}";
     }
   };
 
@@ -66,8 +66,8 @@ namespace morton::details {
             Direction dir,
             unsigned_type Move,
             unsigned_type Hold>
-  Bit_Conveyor(Natural<Size>, Shift<Dist>, Dir<dir>, Mask<Move>, Mask<Hold>)
-      -> Bit_Conveyor<Natural<Size>, Shift<Dist>, Dir<dir>, Mask<Move>, Mask<Hold>>;
+  Simple_Permutation(Natural<Size>, Shift<Dist>, Dir<dir>, Mask<Move>, Mask<Hold>)
+      -> Simple_Permutation<Natural<Size>, Shift<Dist>, Dir<dir>, Mask<Move>, Mask<Hold>>;
 
   template <unsigned_type size,
             signed_type dist,
@@ -75,8 +75,9 @@ namespace morton::details {
             unsigned_type move,
             unsigned_type hold>
   constexpr auto
-  duplicate(const Bit_Conveyor<Natural<size>, Shift<dist>, Dir<dir>, Mask<move>, Mask<hold>> &) {
-    return Bit_Conveyor{
+  duplicate(
+      const Simple_Permutation<Natural<size>, Shift<dist>, Dir<dir>, Mask<move>, Mask<hold>> &) {
+    return Simple_Permutation{
         .size = natural<2 * size>,
         .dist = shift<dist>,
         .dir = Dir<dir>{},
@@ -91,7 +92,8 @@ namespace morton::details {
             unsigned_type move,
             unsigned_type hold>
   constexpr bool
-  partitioned(const Bit_Conveyor<Natural<size>, Shift<dist>, Dir<dir>, Mask<move>, Mask<hold>> &) {
+  partitioned(
+      const Simple_Permutation<Natural<size>, Shift<dist>, Dir<dir>, Mask<move>, Mask<hold>> &) {
     return (move & hold) == 0u;
   }
 
@@ -102,8 +104,9 @@ namespace morton::details {
             unsigned_type hold>
   constexpr bool
   conservative(
-      const Bit_Conveyor<Natural<size>, Shift<dist>, Dir<dir>, Mask<move>, Mask<hold>> &conveyor) {
-    return partitioned(conveyor) && ((conveyor(move) & hold) == 0u);
+      const Simple_Permutation<Natural<size>, Shift<dist>, Dir<dir>, Mask<move>, Mask<hold>>
+          &permutation) {
+    return partitioned(permutation) && ((permutation(move) & hold) == 0u);
   }
 
   template <unsigned_type size,
@@ -112,10 +115,11 @@ namespace morton::details {
             unsigned_type move,
             unsigned_type hold>
   constexpr unsigned_type
-  num_bits(const Bit_Conveyor<Natural<size>, Shift<dist>, Dir<dir>, Mask<move>, Mask<hold>> &) {
-    using Conveyor_Type =
-        Bit_Conveyor<Natural<size>, Shift<dist>, Dir<dir>, Mask<move>, Mask<hold>>;
-    static_assert(conservative(Conveyor_Type{}));
+  num_bits(
+      const Simple_Permutation<Natural<size>, Shift<dist>, Dir<dir>, Mask<move>, Mask<hold>> &) {
+    using Permutation_Type =
+        Simple_Permutation<Natural<size>, Shift<dist>, Dir<dir>, Mask<move>, Mask<hold>>;
+    static_assert(conservative(Permutation_Type{}));
     return std::popcount(move) + std::popcount(hold);
   }
 
@@ -125,7 +129,8 @@ namespace morton::details {
             unsigned_type move,
             unsigned_type hold>
   constexpr unsigned_type
-  domain_bits(const Bit_Conveyor<Natural<size>, Shift<dist>, Dir<dir>, Mask<move>, Mask<hold>> &) {
+  domain_bits(
+      const Simple_Permutation<Natural<size>, Shift<dist>, Dir<dir>, Mask<move>, Mask<hold>> &) {
     return move | hold;
   }
 
@@ -136,8 +141,9 @@ namespace morton::details {
             unsigned_type hold>
   constexpr unsigned_type
   codomain_bits(
-      const Bit_Conveyor<Natural<size>, Shift<dist>, Dir<dir>, Mask<move>, Mask<hold>> &conveyor) {
-    return conveyor(domain_bits(conveyor));
+      const Simple_Permutation<Natural<size>, Shift<dist>, Dir<dir>, Mask<move>, Mask<hold>>
+          &permutation) {
+    return permutation(domain_bits(permutation));
   }
 
 } // end of namespace morton::details

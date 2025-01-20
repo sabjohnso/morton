@@ -13,7 +13,6 @@
 
 namespace morton {
 
-  using details::Bit_Conveyor;
   using details::left;
   using details::make_decoder;
   using details::make_encoder;
@@ -21,6 +20,7 @@ namespace morton {
   using details::natural;
   using details::right;
   using details::shift;
+  using details::Simple_Permutation;
   using details::type;
 
   using details::bits_per_index;

@@ -18,18 +18,18 @@
 
 namespace morton::details {
 
-  template <typename... Conveyors>
-  struct Conveyor_Sequence {
-    static constexpr std::tuple<Conveyors...> parts{};
+  template <typename... Permutations>
+  struct Permutation_Sequence {
+    static constexpr std::tuple<Permutations...> parts{};
 
-    constexpr Conveyor_Sequence(auto &&...){};
+    constexpr Permutation_Sequence(auto &&...){};
 
     template <concepts::integral T>
     constexpr auto
     operator()(const T &value) const {
       constexpr auto recur =
           []<unsigned_type Iter>(const auto recur, const Natural<Iter>, const auto value) {
-            if constexpr (Iter == sizeof...(Conveyors)) {
+            if constexpr (Iter == sizeof...(Permutations)) {
               return value;
             } else {
               return recur(recur, natural<Iter + 1>, std::get<Iter>(parts)(value));
@@ -43,7 +43,7 @@ namespace morton::details {
     operator()(const T &value, const Type<U>) const {
       constexpr auto recur =
           []<unsigned_type Iter>(const auto recur, const Natural<Iter>, const auto value) {
-            if constexpr (Iter == sizeof...(Conveyors)) {
+            if constexpr (Iter == sizeof...(Permutations)) {
               return value;
             } else {
               return recur(recur, natural<Iter + 1>, std::get<Iter>(parts)(value, type<U>));
@@ -53,32 +53,33 @@ namespace morton::details {
     }
 
     friend std::ostream &
-    operator<<(std::ostream &os, const Conveyor_Sequence &sequence) {
-      if constexpr (sizeof...(Conveyors) == 0) {
-        os << "Conveyor_Sequence{}";
+    operator<<(std::ostream &os, const Permutation_Sequence &sequence) {
+      if constexpr (sizeof...(Permutations) == 0) {
+        os << "Permutation_Sequence{}";
       } else {
-        os << "Conveyor_Sequence{" << std::get<0>(sequence.parts);
+        os << "Permutation_Sequence{" << std::get<0>(sequence.parts);
         [&]<std::size_t... i>(std::index_sequence<i...>) {
           ((os << "," << std::get<i + 1>(sequence.parts)), ...);
         }
-        (std::make_index_sequence<sizeof...(Conveyors) - 1>());
+        (std::make_index_sequence<sizeof...(Permutations) - 1>());
         os << "}";
       }
       return os;
     }
   };
 
-  template <typename... Conveyors>
-  Conveyor_Sequence(Conveyors &&...) -> Conveyor_Sequence<std::remove_cvref_t<Conveyors>...>;
+  template <typename... Permutations>
+  Permutation_Sequence(Permutations &&...)
+      -> Permutation_Sequence<std::remove_cvref_t<Permutations>...>;
 
-  template <typename... Conveyors>
+  template <typename... Permutations>
   constexpr bool
-  conservative(Conveyor_Sequence<Conveyors...>) {
-    using Conveyor_Type = Conveyor_Sequence<Conveyors...>;
-    if constexpr (sizeof...(Conveyors) > 0) {
-      return (conservative(Conveyors{}) && ...) &&
-             std::popcount(Conveyor_Type{}(domain_bits(utility::first(Conveyors{}...)))) ==
-                 num_bits(utility::first(Conveyors{}...));
+  conservative(Permutation_Sequence<Permutations...>) {
+    using Permutation_Type = Permutation_Sequence<Permutations...>;
+    if constexpr (sizeof...(Permutations) > 0) {
+      return (conservative(Permutations{}) && ...) &&
+             std::popcount(Permutation_Type{}(domain_bits(utility::first(Permutations{}...)))) ==
+                 num_bits(utility::first(Permutations{}...));
     } else {
       return true;
     }
@@ -102,21 +103,21 @@ namespace morton::details {
     return {};
   }
 
-  template <typename... Conveyors>
+  template <typename... Permutations>
   constexpr auto
-  domain_bits(Conveyor_Sequence<Conveyors...>) {
-    if constexpr (sizeof...(Conveyors) > 0) {
-      return domain_bits(utility::first(Conveyors{}...));
+  domain_bits(Permutation_Sequence<Permutations...>) {
+    if constexpr (sizeof...(Permutations) > 0) {
+      return domain_bits(utility::first(Permutations{}...));
     } else {
       return ~0UL;
     }
   }
 
-  template <typename... Conveyors>
+  template <typename... Permutations>
   constexpr auto
-  codomain_bits(const Conveyor_Sequence<Conveyors...> &conveyor) {
-    if constexpr (sizeof...(Conveyors) > 0) {
-      return conveyor(domain_bits(conveyor));
+  codomain_bits(const Permutation_Sequence<Permutations...> &permutation) {
+    if constexpr (sizeof...(Permutations) > 0) {
+      return permutation(domain_bits(permutation));
     } else {
       return ~0UL;
     }
@@ -132,14 +133,14 @@ namespace morton::details {
   constexpr auto
   make_contraction_masks(Bits_Per_Index<M>, Num_Indices<N>) {
     constexpr auto recur = []<unsigned_type MIter>(
-                               const auto recur, Bits_Per_Index<MIter>, auto &&...conveyors) {
+                               const auto recur, Bits_Per_Index<MIter>, auto &&...permutations) {
       if constexpr (MIter > M) {
-        return Conveyor_Sequence{conveyors...};
+        return Permutation_Sequence{permutations...};
       } else {
         return recur(recur,
                      bits_per_index<2UL * MIter>,
-                     duplicate(conveyors)...,
-                     Bit_Conveyor{
+                     duplicate(permutations)...,
+                     Simple_Permutation{
                          .size = natural<MIter * N>,
                          .dist = shift<(signed_type(MIter) * (signed_type(N) - 1UL)) / 2UL>,
                          .dir = right,
@@ -161,20 +162,20 @@ namespace morton::details {
   constexpr auto
   make_expansion_masks(Bits_Per_Index<M>, Num_Indices<N>) {
     constexpr auto recur =
-        []<unsigned_type MIter>(const auto recur, Bits_Per_Index<MIter>, auto &&...conveyors) {
+        []<unsigned_type MIter>(const auto recur, Bits_Per_Index<MIter>, auto &&...permutations) {
           if constexpr (MIter > M) {
-            return Conveyor_Sequence{conveyors...};
+            return Permutation_Sequence{permutations...};
           } else {
             return recur(recur,
                          bits_per_index<2 * MIter>,
-                         Bit_Conveyor{
+                         Simple_Permutation{
                              .size = natural<MIter * N>,
                              .dist = shift<(MIter * (N - 1)) / 2>,
                              .dir = left,
                              .move = make_expansion_shift_mask(bits_per_index<MIter>),
                              .hold = make_hold_mask(bits_per_index<MIter>),
                          },
-                         duplicate(conveyors)...);
+                         duplicate(permutations)...);
           }
         };
     return recur(recur, bits_per_index<2u>);
@@ -184,10 +185,10 @@ namespace morton::details {
 
 namespace std {
 
-  template <typename... Conveyors>
+  template <typename... Permutations>
   constexpr auto
-  get(const morton::details::Conveyor_Sequence<Conveyors...> &) {
-    get(morton::details::Conveyor_Sequence<Conveyors...>::parts);
+  get(const morton::details::Permutation_Sequence<Permutations...> &) {
+    get(morton::details::Permutation_Sequence<Permutations...>::parts);
   }
 
 } // end of namespace std
