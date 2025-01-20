@@ -73,7 +73,7 @@ namespace morton::details {
     using Conveyor_Type = Conveyor_Sequence<Conveyors...>;
     if constexpr (sizeof...(Conveyors) > 0) {
       return (conservative(Conveyors{}) && ...) &&
-             std::popcount(Conveyor_Type{}(bits(utility::first(Conveyors{}...)))) ==
+             std::popcount(Conveyor_Type{}(domain_bits(utility::first(Conveyors{}...)))) ==
                  num_bits(utility::first(Conveyors{}...));
     } else {
       return true;
@@ -98,4 +98,34 @@ namespace morton::details {
     return {};
   }
 
+  template <typename... Conveyors>
+  constexpr auto
+  domain_bits(Conveyor_Sequence<Conveyors...>) {
+    if constexpr (sizeof...(Conveyors) > 0) {
+      return domain_bits(utility::first(Conveyors{}...));
+    } else {
+      return ~0UL;
+    }
+  }
+
+  template <typename... Conveyors>
+  constexpr auto
+  codomain_bits(const Conveyor_Sequence<Conveyors...> &conveyor) {
+    if constexpr (sizeof...(Conveyors) > 0) {
+      return conveyor(domain_bits(conveyor));
+    } else {
+      return ~0UL;
+    }
+  }
+
 } // end of namespace morton::details
+
+namespace std {
+
+  template <typename... Conveyors>
+  constexpr auto
+  get(const morton::details::Conveyor_Sequence<Conveyors...> &) {
+    get(morton::details::Conveyor_Sequence<Conveyors...>::parts);
+  }
+
+} // end of namespace std

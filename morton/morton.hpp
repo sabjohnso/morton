@@ -26,4 +26,7 @@ namespace morton {
 
   using details::duplicate;
 
+  using details::codomain_bits;
+  using details::domain_bits;
+
 } // end of namespace morton

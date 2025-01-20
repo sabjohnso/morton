@@ -31,6 +31,9 @@ namespace morton::testing {
 
         CHECK(masks(0u) == 0u);
         CHECK(masks(1u) == 1u);
+
+        STATIC_CHECK(masks(0u) == 0u);
+        STATIC_CHECK(masks(1u) == 1u);
       }
     }
 
@@ -71,6 +74,11 @@ namespace morton::testing {
         CHECK(0b0001u == masks(0b0001u));
         CHECK(0b0010u == masks(0b0100u));
         CHECK(0b0011u == masks(0b0101u));
+
+        STATIC_CHECK(0b0000u == masks(0b0000u));
+        STATIC_CHECK(0b0001u == masks(0b0001u));
+        STATIC_CHECK(0b0010u == masks(0b0100u));
+        STATIC_CHECK(0b0011u == masks(0b0101u));
       }
 
       SECTION("3-dimensional") {
@@ -83,6 +91,11 @@ namespace morton::testing {
         CHECK(0b0001u == masks(0b0001u));
         CHECK(0b0010u == masks(0b1000u));
         CHECK(0b0011u == masks(0b1001u));
+
+        STATIC_CHECK(0b0000u == masks(0b0000u));
+        STATIC_CHECK(0b0001u == masks(0b0001u));
+        STATIC_CHECK(0b0010u == masks(0b1000u));
+        STATIC_CHECK(0b0011u == masks(0b1001u));
       }
     }
 
@@ -99,6 +112,12 @@ namespace morton::testing {
         CHECK(0b00000010u == masks(0b00000100u));
         CHECK(0b00000011u == masks(0b00000101u));
         CHECK(0b00001111u == masks(0b01010101u));
+
+        STATIC_CHECK(0b00000000u == masks(0b00000000u));
+        STATIC_CHECK(0b00000001u == masks(0b00000001u));
+        STATIC_CHECK(0b00000010u == masks(0b00000100u));
+        STATIC_CHECK(0b00000011u == masks(0b00000101u));
+        STATIC_CHECK(0b00001111u == masks(0b01010101u));
       }
 
       SECTION("3-dimensional") {
@@ -112,6 +131,12 @@ namespace morton::testing {
         CHECK(0b000000000010u == masks(0b000000001000u));
         CHECK(0b000000000011u == masks(0b000000001001u));
         CHECK(0b000000001111u == masks(0b001001001001u));
+
+        STATIC_CHECK(0b000000000000u == masks(0b000000000000u));
+        STATIC_CHECK(0b000000000001u == masks(0b000000000001u));
+        STATIC_CHECK(0b000000000010u == masks(0b000000001000u));
+        STATIC_CHECK(0b000000000011u == masks(0b000000001001u));
+        STATIC_CHECK(0b000000001111u == masks(0b001001001001u));
       }
     }
 
@@ -123,6 +148,8 @@ namespace morton::testing {
 
         STATIC_CHECK(conservative(masks));
         CHECK(0b0000000011111111u == masks(0b0101010101010101u));
+
+        STATIC_CHECK(0b0000000011111111u == masks(0b0101010101010101u));
       }
 
       SECTION("3-dimensional") {
@@ -131,6 +158,8 @@ namespace morton::testing {
 
         STATIC_CHECK(conservative(masks));
         CHECK(0b000000000000000011111111u == masks(0b001001001001001001001001u));
+
+        STATIC_CHECK(0b000000000000000011111111u == masks(0b001001001001001001001001u));
       }
     }
 
@@ -142,6 +171,9 @@ namespace morton::testing {
 
         STATIC_CHECK(conservative(masks));
         CHECK(0b00000000000000001111111111111111UL == masks(0b01010101010101010101010101010101UL));
+
+        STATIC_CHECK(0b00000000000000001111111111111111UL ==
+                     masks(0b01010101010101010101010101010101UL));
       }
 
       SECTION("3-dimensional") {
@@ -152,6 +184,9 @@ namespace morton::testing {
 
         CHECK(0b000000000000000000000000000000001111111111111111U ==
               masks(0b001001001001001001001001001001001001001001001001U));
+
+        STATIC_CHECK(0b000000000000000000000000000000001111111111111111U ==
+                     masks(0b001001001001001001001001001001001001001001001001U));
       }
     }
 
@@ -164,6 +199,23 @@ namespace morton::testing {
         STATIC_CHECK(conservative(masks));
         CHECK(0b0000000000000000000000000000000011111111111111111111111111111111UL ==
               masks(0b0101010101010101010101010101010101010101010101010101010101010101UL));
+
+        STATIC_CHECK(0b0000000000000000000000000000000011111111111111111111111111111111UL ==
+                     masks(0b0101010101010101010101010101010101010101010101010101010101010101UL));
+      }
+
+      SECTION("3-dimensional") {
+        constexpr auto ndims = 3U;
+        constexpr auto masks = make_contraction_masks(bits_per_index<m>, num_indices<ndims>);
+
+        STATIC_CHECK(conservative(masks));
+        CHECK(
+            0b00000000000000000000000000000000000000000000000000000000000000001111111111111111111111UL ==
+            masks(0b001001001001001001001001001001001001001001001001001001001001001001UL));
+
+        STATIC_CHECK(
+            0b00000000000000000000000000000000000000000000000000000000000000001111111111111111111111UL ==
+            masks(0b001001001001001001001001001001001001001001001001001001001001001001UL));
       }
     }
   }

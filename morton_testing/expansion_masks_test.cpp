@@ -110,12 +110,14 @@ namespace morton::testing {
     }
 
     SECTION("4bits/index") {
-      constexpr auto m = 4u;
+      constexpr auto m = 4U;
       SECTION("2-dimensional") {
-        constexpr auto ndims = 2u;
+        constexpr auto ndims = 2U;
         constexpr auto masks = make_expansion_masks(bits_per_index<m>, num_indices<ndims>);
 
         STATIC_CHECK(conservative(masks));
+        STATIC_CHECK(domain_bits(masks) == 0b00001111U);
+        STATIC_CHECK(codomain_bits(masks) == 0b01010101U);
 
         CHECK(masks(0b00000000u) == 0b00000000u);
         CHECK(masks(0b00000001u) == 0b00000001u);
@@ -150,11 +152,82 @@ namespace morton::testing {
       }
     }
 
-    SECTION("8bits/index") {}
+    SECTION("8bits/index") {
+      constexpr auto m = 8u;
+      SECTION("2-dimensional") {
+        constexpr auto ndims = 2u;
+        constexpr auto masks = make_expansion_masks(bits_per_index<m>, num_indices<ndims>);
 
-    SECTION("16bits/index") {}
+        STATIC_CHECK(conservative(masks));
+        CHECK(masks(0b0000000011111111u) == 0b0101010101010101u);
+      }
 
-    SECTION("32bits/index") {}
+      SECTION("3-dimensional") {
+        constexpr auto ndims = 3u;
+        constexpr auto masks = make_expansion_masks(bits_per_index<m>, num_indices<ndims>);
+
+        STATIC_CHECK(conservative(masks));
+        CHECK(masks(0b000000000000000011111111u) == 0b001001001001001001001001u);
+      }
+    }
+
+    SECTION("16bits/index") {
+      constexpr auto m = 16U;
+      SECTION("2-dimensional") {
+        constexpr auto ndims = 2U;
+        constexpr auto masks = make_expansion_masks(bits_per_index<m>, num_indices<ndims>);
+
+        STATIC_CHECK(conservative(masks));
+        CHECK(masks(0b00000000000000001111111111111111UL) == 0b01010101010101010101010101010101UL);
+        STATIC_CHECK(masks(0b00000000000000001111111111111111UL) ==
+                     0b01010101010101010101010101010101UL);
+      }
+
+      SECTION("3-dimensional") {
+        constexpr auto ndims = 3U;
+        constexpr auto masks = make_expansion_masks(bits_per_index<m>, num_indices<ndims>);
+
+        STATIC_CHECK(conservative(masks));
+
+        CHECK(masks(0b000000000000000000000000000000001111111111111111U) ==
+              0b001001001001001001001001001001001001001001001001U);
+        STATIC_CHECK(masks(0b000000000000000000000000000000001111111111111111U) ==
+                     0b001001001001001001001001001001001001001001001001U);
+      }
+    }
+
+    SECTION("32bits/index") {
+      constexpr auto m = 32U;
+      SECTION("2-dimensional") {
+        constexpr auto ndims = 2U;
+        constexpr auto masks = make_expansion_masks(bits_per_index<m>, num_indices<ndims>);
+
+        STATIC_CHECK(conservative(masks));
+        CHECK(masks(0b0000000000000000000000000000000011111111111111111111111111111111UL) ==
+              0b0101010101010101010101010101010101010101010101010101010101010101UL);
+
+        STATIC_CHECK(masks(0b0000000000000000000000000000000011111111111111111111111111111111UL) ==
+                     0b0101010101010101010101010101010101010101010101010101010101010101UL);
+      }
+
+      SECTION("3-dimensional") {
+        constexpr auto ndims = 3U;
+        constexpr auto masks = make_expansion_masks(bits_per_index<m>, num_indices<ndims>);
+
+        // The transformation here  is not conservative because it can really only encode
+        // 22 bits per index before it starts moving bits off the left side.
+        STATIC_CHECK(!conservative(masks));
+        CHECK(
+            masks(
+                0b00000000000000000000000000000000000000000000000000000000000000001111111111111111111111UL) ==
+            0b001001001001001001001001001001001001001001001001001001001001001001UL);
+
+        STATIC_CHECK(
+            masks(
+                0b00000000000000000000000000000000000000000000000000000000000000001111111111111111111111UL) ==
+            0b001001001001001001001001001001001001001001001001001001001001001001UL);
+      }
+    }
   }
 
 } // end of namespace morton::testing

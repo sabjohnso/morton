@@ -125,8 +125,19 @@ namespace morton::details {
             unsigned_type move,
             unsigned_type hold>
   constexpr unsigned_type
-  bits(const Bit_Conveyor<Natural<size>, Shift<dist>, Dir<dir>, Mask<move>, Mask<hold>> &) {
+  domain_bits(const Bit_Conveyor<Natural<size>, Shift<dist>, Dir<dir>, Mask<move>, Mask<hold>> &) {
     return move | hold;
+  }
+
+  template <unsigned_type size,
+            signed_type dist,
+            Direction dir,
+            unsigned_type move,
+            unsigned_type hold>
+  constexpr unsigned_type
+  codomain_bits(
+      const Bit_Conveyor<Natural<size>, Shift<dist>, Dir<dir>, Mask<move>, Mask<hold>> &conveyor) {
+    return conveyor(domain_bits(conveyor));
   }
 
 } // end of namespace morton::details
