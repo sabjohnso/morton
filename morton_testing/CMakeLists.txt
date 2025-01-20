@@ -12,3 +12,7 @@ macro(morton_add_test test_name)
     CXX_STANDARD ${morton_CXX_STANDARD})
   add_test(${test_name} ${exe_name})
 endmacro()
+
+morton_add_test(bit_conveyor)
+morton_add_test(expansion_masks)
+morton_add_test(utility)
