@@ -34,6 +34,20 @@ namespace morton::details {
       return recur(recur, natural<0>, std::make_signed_t<T>(value));
     }
 
+    template <std::integral T, std::integral U>
+    constexpr auto
+    operator()(const T &value, const Type<U>) const {
+      constexpr auto recur =
+          []<unsigned_type Iter>(const auto recur, const Natural<Iter>, const auto value) {
+            if constexpr (Iter == sizeof...(Conveyors)) {
+              return value;
+            } else {
+              return recur(recur, natural<Iter + 1>, std::get<Iter>(parts)(value, type<U>));
+            }
+          };
+      return recur(recur, natural<0>, std::make_signed_t<T>(value));
+    }
+
     friend std::ostream &
     operator<<(std::ostream &os, const Conveyor_Sequence &sequence) {
       if constexpr (sizeof...(Conveyors) == 0) {
@@ -64,6 +78,24 @@ namespace morton::details {
     } else {
       return true;
     }
+  }
+
+  template <unsigned_type N>
+  struct Bits_Per_Index {};
+
+  template <unsigned_type N>
+  constexpr Bits_Per_Index<N> bits_per_index{};
+
+  template <unsigned_type N>
+  struct Num_Indices {};
+
+  template <unsigned_type N>
+  constexpr Num_Indices<N> num_indices{};
+
+  template <unsigned_type N>
+  constexpr Mask<(1u << (N / 2u)) - 1u>
+  make_hold_mask(const Bits_Per_Index<N> &) {
+    return {};
   }
 
 } // end of namespace morton::details

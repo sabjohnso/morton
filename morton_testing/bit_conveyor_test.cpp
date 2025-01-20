@@ -24,6 +24,7 @@ namespace morton::testing {
     constexpr Bit_Conveyor conveyor{
         .size = natural<size>,
         .dist = shift<dist>,
+        .dir = left,
         .move = mask<move>,
         .hold = mask<hold>,
     };

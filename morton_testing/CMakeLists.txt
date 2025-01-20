@@ -15,4 +15,5 @@ endmacro()
 
 morton_add_test(bit_conveyor)
 morton_add_test(expansion_masks)
+morton_add_test(contraction_masks)
 morton_add_test(utility)

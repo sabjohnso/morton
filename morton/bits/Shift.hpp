@@ -34,8 +34,13 @@ namespace morton::details {
     }
 
     constexpr auto
-    operator()(std::integral auto arg) const {
+    operator()(std::integral auto arg, const Dir<Direction::LEFT> &) const {
       return arg << I;
+    }
+
+    constexpr auto
+    operator()(std::integral auto arg, const Dir<Direction::RIGHT> &) const {
+      return arg >> I;
     }
 
     friend std::ostream &

@@ -8,13 +8,16 @@
 #include <morton/bits/Natural.hpp>
 #include <morton/bits/Shift.hpp>
 #include <morton/bits/Type.hpp>
+#include <morton/bits/contraction_masks.hpp>
 #include <morton/bits/expansion_masks.hpp>
 
 namespace morton {
 
   using details::Bit_Conveyor;
+  using details::left;
   using details::mask;
   using details::natural;
+  using details::right;
   using details::shift;
   using details::type;
 

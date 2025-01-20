@@ -49,7 +49,7 @@ namespace morton::testing {
       constexpr auto m = 2u; // number of bits per index to be encoded
 
       SECTION("1-dimensional") {
-        // !! Here, note that 1-dimensional expansion masks don't expand anything, because
+        // !! 1-dimensional expansion masks don't expand anything, because
         // the 1-dimensional morton ordering is just the normal ordering of natural numbes.
         // This is shown here, because the masks with one bit per index already exhibit this
         // behavior, regardless of the number of dimensions.
