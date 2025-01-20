@@ -13,7 +13,7 @@ macro(morton_add_test test_name)
   add_test(${test_name} ${exe_name})
 endmacro()
 
-morton_add_test(bit_conveyor)
+morton_add_test(simple_permutation)
 morton_add_test(expansion_masks)
 morton_add_test(contraction_masks)
 morton_add_test(utility)
