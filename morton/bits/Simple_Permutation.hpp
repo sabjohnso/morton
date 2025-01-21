@@ -142,6 +142,10 @@ namespace morton::details {
     return partitioned(permutation) && ((permutation(move) & hold) == 0u);
   }
 
+  /**
+   * @brief Return the number of bits handled by the permuation: the
+   * population count of the move and hold masks
+   */
   template <unsigned_type size,
             signed_type dist,
             Direction dir,
@@ -156,6 +160,9 @@ namespace morton::details {
     return std::popcount(move) + std::popcount(hold);
   }
 
+  /**
+   * @brief Return the input bits for the permuation
+   */
   template <unsigned_type size,
             signed_type dist,
             Direction dir,
@@ -167,6 +174,9 @@ namespace morton::details {
     return move | hold;
   }
 
+  /**
+   * @brief Return the output bits for the permutation
+   */
   template <unsigned_type size,
             signed_type dist,
             Direction dir,
