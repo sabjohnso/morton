@@ -6,6 +6,7 @@ macro(morton_add_test test_name)
   add_executable(${exe_name} ${src_name})
   target_link_libraries(${exe_name} PRIVATE
     morton::header
+    morton::capi
     Catch2::Catch2WithMain)
   set_target_properties(${exe_name}
     PROPERTIES
@@ -19,3 +20,4 @@ morton_add_test(contraction_masks)
 morton_add_test(utility)
 morton_add_test(encoder)
 morton_add_test(decoder)
+morton_add_test(capi)

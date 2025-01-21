@@ -229,22 +229,22 @@ morton64bit_decode3d_22bits_per_index(morton64bit m) {
 MORTON_EXPORT morton64bit
 morton64bit_decode3d_22bits_per_index_0(morton64bit m) {
   using namespace morton;
-  constexpr auto decode = make_decoder(bits_per_index<32>, num_indices<2>, row_major);
+  constexpr auto decode = make_decoder(bits_per_index<32>, num_indices<3>, row_major);
   return decode(natural<0>, m);
 }
 
 MORTON_EXPORT morton64bit
 morton64bit_decode3d_22bits_per_index_1(morton64bit m) {
   using namespace morton;
-  constexpr auto decode = make_decoder(bits_per_index<32>, num_indices<2>, row_major);
+  constexpr auto decode = make_decoder(bits_per_index<32>, num_indices<3>, row_major);
   return decode(natural<1>, m);
 }
 
 MORTON_EXPORT morton64bit
 morton64bit_decode3d_22bits_per_index_2(morton64bit m) {
   using namespace morton;
-  constexpr auto decode = make_decoder(bits_per_index<32>, num_indices<2>, row_major);
-  return decode(natural<1>, m);
+  constexpr auto decode = make_decoder(bits_per_index<32>, num_indices<3>, row_major);
+  return decode(natural<2>, m);
 }
 
 // 16bits/index
