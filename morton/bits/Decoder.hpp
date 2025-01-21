@@ -22,7 +22,7 @@ namespace morton::details {
 
     template <unsigned_type I, std::integral T>
     constexpr auto
-    operator()(Natural<I>, const T index) const {
+    operator()(Natural<I>, const T &index) const {
       constexpr unsigned_type N = Num_Indices::value;
       static_assert(I < N);
       if constexpr (Orientation{} == row_major) {

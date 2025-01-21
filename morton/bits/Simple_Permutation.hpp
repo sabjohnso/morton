@@ -27,8 +27,13 @@ namespace morton::details {
    *
    * @tparam Size Specification of the extent in bits of the operation
    * @tparam Dist Specification of the distance bits will be shifted
+   * @tparam Dir  Specification of the direction the bits will be shifted
    * @tparam Move Specification of the bits that will be moved
    * @tparam Hold Specification of the bits that will not move (the remaining are zeroed).
+   *
+   * @details All fields in the `Simple_Permutation` type are empty
+   * types and merly provide documented configuration, on construction
+   * of the type and when printing the type.
    */
   template <typename Size, typename Dist, typename Dir, typename Move, typename Hold>
   struct Simple_Permutation {
@@ -38,18 +43,29 @@ namespace morton::details {
     Move move{};
     Hold hold{};
 
+    /**
+     * @brief Apply the permutation to the bits of the input value.
+     */
     template <concepts::integral T>
     constexpr concepts::unsigned_integral auto
     operator()(const T &input) const {
       return dist(move(input), dir) + hold(input);
     }
 
+    /**
+     * @brief Apply the permutation of the bits of the input value
+     * cast as the type in the type specification argument.
+     */
     template <concepts::integral T, concepts::unsigned_integral U>
     constexpr concepts::unsigned_integral auto
     operator()(const T &input, Type<U>) const {
       return U(dist(move(U(input)), dir) + hold(U(input)));
     }
 
+    /**
+     * @brief Write a readable representation of of the permutation to
+     * the output stream.
+     */
     friend std::ostream &
     operator<<(std::ostream &os, const Simple_Permutation &permutation) {
       return os << "Simple_Permutation{"
@@ -69,6 +85,10 @@ namespace morton::details {
   Simple_Permutation(Natural<Size>, Shift<Dist>, Dir<dir>, Mask<Move>, Mask<Hold>)
       -> Simple_Permutation<Natural<Size>, Shift<Dist>, Dir<dir>, Mask<Move>, Mask<Hold>>;
 
+  /**
+   * @brief Return a permutation that has twice the size as the input
+   * permutation and duplicated bit patterns.
+   */
   template <unsigned_type size,
             signed_type dist,
             Direction dir,
@@ -86,6 +106,15 @@ namespace morton::details {
     };
   }
 
+  /**
+   * @brief A predicate returning true if neither the domain or
+   * codomain of the `move` bit set intersect with the `hold` bit set.
+   *
+   * @details This is an important aspect of bit conserving
+   * permutations: if either the domain or codomain intersect with the
+   * `hold` bit set, bit will either be duplicated or destroyed,
+   * losing information.
+   */
   template <unsigned_type size,
             signed_type dist,
             Direction dir,
@@ -97,6 +126,10 @@ namespace morton::details {
     return (move & hold) == 0u;
   }
 
+  /**
+   * @brief A predicate on permutations that returns true if the
+   * permutation conserves bits, and false otherwise.
+   */
   template <unsigned_type size,
             signed_type dist,
             Direction dir,
