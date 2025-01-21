@@ -78,7 +78,8 @@ namespace morton::details {
     using Permutation_Type = Permutation_Sequence<Permutations...>;
     if constexpr (sizeof...(Permutations) > 0) {
       return (conservative(Permutations{}) && ...) &&
-             std::popcount(Permutation_Type{}(domain_bits(utility::first(Permutations{}...)))) ==
+             static_cast<unsigned_type>(std::popcount(
+                 Permutation_Type{}(domain_bits(utility::first(Permutations{}...))))) ==
                  num_bits(utility::first(Permutations{}...));
     } else {
       return true;
