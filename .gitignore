@@ -1,3 +1,6 @@
+# CMake
+CMakeUserPresets.cmake
+
 # emacs backup files
 *~
 \#*\#
@@ -29,3 +32,7 @@ Asm/
 *.DLL
 *.exe
 *.EXE
+
+# python
+*.pyc
+**/__pycache__/
