@@ -13,6 +13,10 @@
 
 namespace morton::details {
 
+  /**
+   * @brief A type describing the decoding of Morton indices for a specified number of indices and
+   * orientation.
+   */
   template <typename Num_Indices, typename Orientation, typename Permutation>
   struct Decoder {
 
@@ -47,6 +51,9 @@ namespace morton::details {
   Decoder(const Num_Indices &, const Orientation &, const Permutation &)
       -> Decoder<Num_Indices, Orientation, Permutation>;
 
+  /**
+   * @brief Return a decoder configured according tot the inputs.
+   */
   template <unsigned_type M, unsigned_type N, Orientation orientation>
   constexpr auto
   make_decoder(Bits_Per_Index<M>, Num_Indices<N>, Orient<orientation>) {

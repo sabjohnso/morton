@@ -78,7 +78,7 @@ namespace morton::details {
   };
 
   template <unsigned_type Size,
-            signed_type Dist,
+            unsigned_type Dist,
             Direction dir,
             unsigned_type Move,
             unsigned_type Hold>
@@ -90,7 +90,7 @@ namespace morton::details {
    * permutation and duplicated bit patterns.
    */
   template <unsigned_type size,
-            signed_type dist,
+            unsigned_type dist,
             Direction dir,
             unsigned_type move,
             unsigned_type hold>
@@ -116,7 +116,7 @@ namespace morton::details {
    * losing information.
    */
   template <unsigned_type size,
-            signed_type dist,
+            unsigned_type dist,
             Direction dir,
             unsigned_type move,
             unsigned_type hold>
@@ -131,7 +131,7 @@ namespace morton::details {
    * permutation conserves bits, and false otherwise.
    */
   template <unsigned_type size,
-            signed_type dist,
+            unsigned_type dist,
             Direction dir,
             unsigned_type move,
             unsigned_type hold>
@@ -147,7 +147,7 @@ namespace morton::details {
    * population count of the move and hold masks
    */
   template <unsigned_type size,
-            signed_type dist,
+            unsigned_type dist,
             Direction dir,
             unsigned_type move,
             unsigned_type hold>
@@ -164,7 +164,7 @@ namespace morton::details {
    * @brief Return the input bits for the permuation
    */
   template <unsigned_type size,
-            signed_type dist,
+            unsigned_type dist,
             Direction dir,
             unsigned_type move,
             unsigned_type hold>
@@ -178,7 +178,7 @@ namespace morton::details {
    * @brief Return the output bits for the permutation
    */
   template <unsigned_type size,
-            signed_type dist,
+            unsigned_type dist,
             Direction dir,
             unsigned_type move,
             unsigned_type hold>

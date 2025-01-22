@@ -12,6 +12,9 @@
 
 namespace morton::details {
 
+  /**
+   * @brief A compile-time unsigned integer.
+   */
   template <unsigned_type N>
   struct Natural {
     static constexpr unsigned_type value{N};

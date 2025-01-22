@@ -7,6 +7,9 @@
 
 namespace morton::details {
 
+  /**
+   * @brief A with instances acting as proxies for types.
+   */
   template <typename T>
   struct Type {
     using type = T;
@@ -29,6 +32,9 @@ namespace morton::details {
     }
   };
 
+  /**
+   * @brief A variable template for specifying types
+   */
   template <typename T>
   constexpr Type<std::remove_cvref_t<T>> type{};
 

@@ -14,6 +14,9 @@
 
 namespace morton::details {
 
+  /**
+   * @brief A compile-time unsigned integer specifying a bit pattern
+   */
   template <unsigned_type N>
   struct Mask {
     static constexpr unsigned_type value{N};
